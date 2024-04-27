@@ -43,7 +43,7 @@ SETLOCAL ENABLEDELAYEDEXPANSION
 
   :$CONVERT_FILE_RUN
       :: Convert file to multi-resolution ICO
-      SET image_magick_args=!image_magick_cmd! "!input_file_path!" -define "icon:auto-resize=256,128,96,64,48,32,24,16" "!target_file_path!"
+      SET image_magick_args=!image_magick_cmd! "!input_file_path!" -compress none -define "icon:auto-resize=256,128,96,64,48,32,24,16" "!target_file_path!"
       ECHO ##[cmd] "!image_magick_path!" !image_magick_args!
       CALL "!image_magick_path!" !image_magick_args!
       GOTO:$CONVERT_FILE_DONE
@@ -56,6 +56,7 @@ SETLOCAL ENABLEDELAYEDEXPANSION
 ENDLOCAL & EXIT /B %ERRORLEVEL%
 
 :CONVERT_ALL
+SETLOCAL ENABLEDELAYEDEXPANSION
   SET "arg_path=%~1"
   SET "target_path=%~dp2"
   ECHO Source: "!arg_path!"
@@ -68,6 +69,7 @@ ENDLOCAL & EXIT /B %ERRORLEVEL%
     REM Iterate through PNG, GIF, BMP, SVG and JPG files in directory
     FOR %%f IN ("!arg_path!\*.png" "!arg_path!\*.bmp" "!arg_path!\*.gif" "!arg_path!\*.jpg" "!arg_path!\*.jpeg" "!arg_path!\*.svg") DO (
       call :CONVERT_FILE "%%f" "!target_path!"
+      if errorlevel 1 goto:$CONVERT_ALL_DONE
     )
     GOTO:$CONVERT_ALL_DONE
 
@@ -76,11 +78,12 @@ ENDLOCAL & EXIT /B %ERRORLEVEL%
     REM ECHO File : !arg_path!
     FOR %%f IN ("!arg_path!") DO (
       call :CONVERT_FILE "%%f"
+      if errorlevel 1 goto:$CONVERT_ALL_DONE
     )
     GOTO:$CONVERT_ALL_DONE
 
     :$CONVERT_ALL_DONE
-exit /b %ERRORLEVEL%
+ENDLOCAL & EXIT /B %ERRORLEVEL%
 
 :$MAIN
 SETLOCAL ENABLEEXTENSIONS ENABLEDELAYEDEXPANSION
@@ -96,4 +99,4 @@ SETLOCAL ENABLEEXTENSIONS ENABLEDELAYEDEXPANSION
   SET "target_path=%input_argument:PNGs=ICO%"
 
   CALL :CONVERT_ALL "!input_argument!" "%target_path%\"
-ENDLOCAL & EXIT /b %errorlevel%
+ENDLOCAL & EXIT /b %ERRORLEVEL%
