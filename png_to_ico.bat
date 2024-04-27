@@ -1,5 +1,21 @@
-@ECHO ON
+@ECHO OFF
 GOTO:$MAIN
+REM
+REM    Name :
+REM          PNG to ICO
+REM    Author :
+REM          ▄▄▄▄▄▄▄  ▄ ▄▄ ▄▄▄▄▄▄▄
+REM          █ ▄▄▄ █ ██ ▀▄ █ ▄▄▄ █
+REM          █ ███ █ ▄▀ ▀▄ █ ███ █
+REM          █▄▄▄▄▄█ █ ▄▀█ █▄▄▄▄▄█
+REM          ▄▄ ▄  ▄▄▀██▀▀ ▄▄▄ ▄▄
+REM           ▀█▄█▄▄▄█▀▀ ▄▄▀█ █▄▀█
+REM           █ █▀▄▄▄▀██▀▄ █▄▄█ ▀█
+REM          ▄▄▄▄▄▄▄ █▄█▀ ▄ ██ ▄█
+REM          █ ▄▄▄ █  █▀█▀ ▄▀▀  ▄▀
+REM          █ ███ █ ▀▄  ▄▀▀▄▄▀█▀█
+REM          █▄▄▄▄▄█ ███▀▄▀ ▀██ ▄
+REM
 
 :CONVERT_FILE
 SETLOCAL ENABLEDELAYEDEXPANSION
@@ -15,8 +31,8 @@ SETLOCAL ENABLEDELAYEDEXPANSION
     SET "PATH=%PATH%;!MAGICK_CODER_MODULE_PATH!"
   )
 
-  SET "image_magick_path=%USERPROFILE%\scoop\apps\imagemagick\current\convert.exe"
-  SET "image_magick_cmd="
+  SET "image_magick_path=%USERPROFILE%\scoop\apps\imagemagick\current\magick.exe"
+  SET "image_magick_cmd=convert"
   IF EXIST "!image_magick_path!" (
     CD /D "%USERPROFILE%\scoop\apps\imagemagick\current"
   ) ELSE (
@@ -68,40 +84,16 @@ exit /b %ERRORLEVEL%
 
 :$MAIN
 SETLOCAL ENABLEEXTENSIONS ENABLEDELAYEDEXPANSION
-  REM    Name :
-  REM          PNG to ICO
-  REM    Author :
-  REM          ▄▄▄▄▄▄▄  ▄ ▄▄ ▄▄▄▄▄▄▄
-  REM          █ ▄▄▄ █ ██ ▀▄ █ ▄▄▄ █
-  REM          █ ███ █ ▄▀ ▀▄ █ ███ █
-  REM          █▄▄▄▄▄█ █ ▄▀█ █▄▄▄▄▄█
-  REM          ▄▄ ▄  ▄▄▀██▀▀ ▄▄▄ ▄▄
-  REM           ▀█▄█▄▄▄█▀▀ ▄▄▀█ █▄▀█
-  REM           █ █▀▄▄▄▀██▀▄ █▄▄█ ▀█
-  REM          ▄▄▄▄▄▄▄ █▄█▀ ▄ ██ ▄█
-  REM          █ ▄▄▄ █  █▀█▀ ▄▀▀  ▄▀
-  REM          █ ███ █ ▀▄  ▄▀▀▄▄▀█▀█
-  REM          █▄▄▄▄▄█ ███▀▄▀ ▀██ ▄
-  @ECHO off
-  REM Console title
   TITLE PNG to ICO
-  REM Script folder path
-  SET "directoryPath=%~dp0"
-
-  :: Console height / width
-  REM MODE 65,30 | ECHO off
-
   ECHO.
   ECHO   -------------------------------------------------------------
-  ECHO              PNG to ICO :
+  ECHO              PNG to ICO
   ECHO   -------------------------------------------------------------
   ECHO.
 
-  REM First command line argument
   SET "input_argument=%~1"
   IF "!input_argument!"=="" SET "input_argument=%~dp0..\PNGs"
-  IF NOT EXIST "!input_argument!" SET "input_argument=%~dp0..\PNGs"
-
   SET "target_path=%input_argument:PNGs=ICO%"
-    call :CONVERT_ALL "!input_argument!" "%target_path%\"
-endlocal & exit /b %errorlevel%
+
+  CALL :CONVERT_ALL "!input_argument!" "%target_path%\"
+ENDLOCAL & EXIT /b %errorlevel%
